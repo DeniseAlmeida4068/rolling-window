@@ -25,3 +25,10 @@ For stream processing where you need a quick, correct summary of the last *N* va
 
 - `mean()` on an empty window returns `0.0` rather than raising, so callers can do arithmetic without a guard. `peak()` and `trough()` on an empty window return `math.nan`.
 - Non-finite inputs (`math.nan`, `math.inf`) are accepted as-is and participate in comparisons under IEEE 754 semantics. Pushing `NaN` makes `peak()`, `trough()` and `mean()` return `NaN` until it leaves the window. The library reports what was fed to it; it does not clamp or drop values silently.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
